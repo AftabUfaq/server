@@ -1,16 +1,21 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
-const authRoute = require('./src/config/routes/authRoute');
-var multer = require('multer');
-var upload = multer();
-// parse requests of content-type: application/json
+
+
+const authRoute = require('./src/routes/authRoute');
+const uploadRoute = require('./src/routes/imageupload')
+
+app.use('/images', express.static(__dirname + '/images'));
 app.use(bodyParser.json());
-app.use(upload.array());
+
+
+
 // parse requests of content-type: application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(authRoute);
+app.use(uploadRoute);
 
 // simple route
 app.get("/", (req, res) => {
