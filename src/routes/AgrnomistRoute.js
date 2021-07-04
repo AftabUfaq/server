@@ -46,4 +46,54 @@ router.post('/getalluserforagrnomist' , async (req, res) => {
     });
   });
 
+
+  router.post('/agronomistpackge' , async (req, res) => {
+  
+    var uri = `${req.body.uri}`
+   
+    var sampleDate = `${req.body.sampleDate}`
+    var sampleCollected = `${req.body.sampleCollected}`
+    var ec = `${req.body.ec}`
+    var ph = `${req.body.ph}`
+
+    var sql = "INSERT INTO `agrnomistpackage` (`id`, `name`, `duration`, `quantity`, `price`, `pdfpath`) VALUES (NULL, ?,?,?,?,?);";
+    db.getConnection(function (err, db) {
+      if (err){
+          res.status(404).send({error:'Some Thing Went Wrong'})
+          return; 
+      }
+          // Executing the MySQL query (select all data from the 'users' table).
+       db.query(sql, [sampleDate,ph, sampleCollected,ec,uri], function (error, results, fields) {
+        // If some error occurs, we throw an error.
+        if (error){
+          console.log('error' , error.sqlMessage)
+          res.status(404).send({error:'Some Thing Went Wrong'})
+      }
+        res.status(200).send(results)
+      });
+    });
+  });
+  router.post('/getpackages' , async (req, res) => {
+   
+    var sql = "SELECT * FROM `agrnomistpackage`";
+    db.getConnection(function (err, db) {
+      if (err){
+          res.status(404).send({error:'Some Thing Went Wrong'})
+          return; 
+      }
+          // Executing the MySQL query (select all data from the 'users' table).
+       db.query(sql, [], function (error, results, fields) {
+        // If some error occurs, we throw an error.
+        if (error){
+          console.log('error' , error.sqlMessage)
+          res.status(404).send({error:'Some Thing Went Wrong'})
+      }
+     // console.log(results, 'results')
+        // Getting the 'response' from the database and sending it to our route. This is were the data is.
+        res.status(200).send(results)
+      });
+    });
+  });
+
+
   module.exports = router;
